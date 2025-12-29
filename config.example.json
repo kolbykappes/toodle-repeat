@@ -1,0 +1,30 @@
+{
+  "tasks": [
+    {
+      "title": "Daily standup prep",
+      "priority": 2,
+      "context": "Work",
+      "recurrence": "daily"
+    },
+    {
+      "title": "Check email",
+      "priority": 1,
+      "context": "Work",
+      "recurrence": "daily"
+    },
+    {
+      "title": "Weekly review",
+      "priority": 3,
+      "context": "Personal",
+      "recurrence": "weekly",
+      "dayOfWeek": 1
+    },
+    {
+      "title": "Plan next week",
+      "priority": 3,
+      "context": "Personal",
+      "recurrence": "weekly",
+      "dayOfWeek": 0
+    }
+  ]
+}
