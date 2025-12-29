@@ -11,15 +11,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const accessToken = process.env.TOODLEDO_ACCESS_TOKEN;
-    if (!accessToken) {
-      return NextResponse.json(
-        { error: 'TOODLEDO_ACCESS_TOKEN not configured' },
-        { status: 500 }
-      );
-    }
-
-    const result = await createScheduledTasks(accessToken);
+    const result = await createScheduledTasks();
     return NextResponse.json(result);
   } catch (error) {
     console.error('Cron error:', error);

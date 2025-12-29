@@ -12,19 +12,57 @@ A simple app to send recurring tasks to your Toodledo account automatically.
 
 ## Setup
 
-### 1. Get Toodledo Access Token
+### 1. Register Toodledo App
 
-You'll need a Toodledo API access token. If you have your app credentials (app ID, client ID, client secret), you can get an access token by following the [Toodledo API documentation](https://api.toodledo.com/3/index.php).
+1. Go to https://api.toodledo.com/3/account/doc_register.php
+2. Register a new application
+3. Save your **Client ID** and **Client Secret**
+4. Set redirect URI to `http://localhost:3000/callback` (or any URL - not used for manual flow)
 
-### 2. Deploy to Vercel
+### 2. Get OAuth Tokens Manually
+
+**Build authorization URL** (replace `YOUR_CLIENT_ID` and `YOUR_REDIRECT_URI`):
+```
+https://api.toodledo.com/3/account/authorize.php?response_type=code&client_id=YOUR_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI&scope=basic%20tasks&state=random123
+```
+
+Visit the URL in your browser, log in, and authorize. You'll be redirected to a URL like:
+```
+http://localhost:3000/callback?code=AUTHORIZATION_CODE&state=random123
+```
+
+Copy the `AUTHORIZATION_CODE` from the URL.
+
+**Exchange code for tokens** (replace placeholders):
+```bash
+curl -X POST https://api.toodledo.com/3/account/token.php \
+  -u "YOUR_CLIENT_ID:YOUR_CLIENT_SECRET" \
+  -d "grant_type=authorization_code&code=AUTHORIZATION_CODE&redirect_uri=YOUR_REDIRECT_URI"
+```
+
+You'll receive:
+```json
+{
+  "access_token": "...",
+  "refresh_token": "...",
+  "expires_in": 7200
+}
+```
+
+Save both tokens! Access tokens expire after 2 hours but are auto-refreshed. Refresh tokens expire after 30 days of inactivity.
+
+### 3. Deploy to Vercel
 
 1. Push this repository to GitHub
 2. Import the project in Vercel
 3. Add environment variables:
-   - `TOODLEDO_ACCESS_TOKEN`: Your Toodledo access token
+   - `TOODLEDO_CLIENT_ID`: Your client ID
+   - `TOODLEDO_CLIENT_SECRET`: Your client secret
+   - `TOODLEDO_ACCESS_TOKEN`: Initial access token from step 2
+   - `TOODLEDO_REFRESH_TOKEN`: Refresh token from step 2
    - `CRON_SECRET`: (Optional) A random string for cron endpoint security
 
-### 3. Configure Tasks
+### 4. Configure Tasks
 
 Visit your deployed app's dashboard to configure tasks. The config is a JSON file with this structure:
 
@@ -82,9 +120,14 @@ Visit http://localhost:3000 to access the dashboard.
 
 Create a `.env.local` file with your credentials:
 ```
-TOODLEDO_ACCESS_TOKEN=your_token
+TOODLEDO_CLIENT_ID=your_client_id
+TOODLEDO_CLIENT_SECRET=your_client_secret
+TOODLEDO_ACCESS_TOKEN=your_initial_access_token
+TOODLEDO_REFRESH_TOKEN=your_refresh_token
 CRON_SECRET=optional_secret
 ```
+
+The app automatically refreshes access tokens before they expire (every 2 hours).
 
 ## API Endpoints
 

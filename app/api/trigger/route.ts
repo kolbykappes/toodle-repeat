@@ -3,15 +3,7 @@ import { createScheduledTasks } from '@/lib/scheduler';
 
 export async function POST() {
   try {
-    const accessToken = process.env.TOODLEDO_ACCESS_TOKEN;
-    if (!accessToken) {
-      return NextResponse.json(
-        { error: 'TOODLEDO_ACCESS_TOKEN not configured' },
-        { status: 500 }
-      );
-    }
-
-    const result = await createScheduledTasks(accessToken);
+    const result = await createScheduledTasks();
     return NextResponse.json(result);
   } catch (error) {
     console.error('Trigger error:', error);

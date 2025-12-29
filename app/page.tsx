@@ -56,6 +56,41 @@ export default function Dashboard() {
     }
   };
 
+  const loadExampleConfig = () => {
+    const exampleConfig = {
+      tasks: [
+        {
+          title: "Daily standup prep",
+          priority: 2,
+          context: "Work",
+          recurrence: "daily"
+        },
+        {
+          title: "Check email",
+          priority: 1,
+          context: "Work",
+          recurrence: "daily"
+        },
+        {
+          title: "Weekly review",
+          priority: 3,
+          context: "Personal",
+          recurrence: "weekly",
+          dayOfWeek: 1
+        },
+        {
+          title: "Plan next week",
+          priority: 3,
+          context: "Personal",
+          recurrence: "weekly",
+          dayOfWeek: 0
+        }
+      ]
+    };
+    setConfigText(JSON.stringify(exampleConfig, null, 2));
+    setMessage('Example config loaded! Edit as needed and click Save Config.');
+  };
+
   return (
     <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto', fontFamily: 'monospace' }}>
       <h1>Toodledo Recurring Tasks</h1>
@@ -69,6 +104,24 @@ export default function Dashboard() {
 
       <div style={{ marginBottom: '30px' }}>
         <h2>Edit Config</h2>
+        <div style={{ marginBottom: '10px' }}>
+          <button
+            onClick={loadExampleConfig}
+            style={{
+              padding: '8px 16px',
+              background: '#6c757d',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+            }}
+          >
+            Load Example Config
+          </button>
+          <span style={{ marginLeft: '10px', fontSize: '12px', color: '#666' }}>
+            Priority: 0=negative, 1=low, 2=medium, 3=high, 4=top | DayOfWeek: 0=Sun, 1=Mon, ..., 6=Sat
+          </span>
+        </div>
         <textarea
           value={configText}
           onChange={(e) => setConfigText(e.target.value)}
