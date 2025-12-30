@@ -91,9 +91,46 @@ export default function Dashboard() {
     setMessage('Example config loaded! Edit as needed and click Save Config.');
   };
 
+  const connectToToodledo = () => {
+    // Construct OAuth URL
+    const clientId = prompt('Enter your Toodledo Client ID:');
+    if (!clientId) return;
+
+    const redirectUri = `${window.location.origin}/oauth/callback`;
+    const authUrl = `https://api.toodledo.com/3/account/authorize.php?response_type=code&client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=basic%20tasks&state=oauth`;
+
+    // Redirect to Toodledo OAuth page
+    window.location.href = authUrl;
+  };
+
   return (
     <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto', fontFamily: 'monospace' }}>
       <h1>Toodledo Recurring Tasks</h1>
+
+      <div style={{ marginBottom: '30px', padding: '20px', background: '#e7f3ff', borderRadius: '8px', border: '2px solid #0070f3' }}>
+        <h2 style={{ marginTop: 0 }}>Setup</h2>
+        <p style={{ margin: '10px 0', fontSize: '14px' }}>
+          First time? Click below to connect your Toodledo account. You'll need your Client ID from Toodledo.
+        </p>
+        <button
+          onClick={connectToToodledo}
+          style={{
+            padding: '12px 24px',
+            background: '#0070f3',
+            color: 'white',
+            border: 'none',
+            borderRadius: '6px',
+            cursor: 'pointer',
+            fontSize: '16px',
+            fontWeight: 'bold',
+          }}
+        >
+          Connect to Toodledo
+        </button>
+        <p style={{ margin: '10px 0 0 0', fontSize: '12px', color: '#666' }}>
+          Make sure TOODLEDO_CLIENT_ID and TOODLEDO_CLIENT_SECRET are set in your environment variables first!
+        </p>
+      </div>
 
       <div style={{ marginBottom: '30px' }}>
         <h2>Current Config</h2>
